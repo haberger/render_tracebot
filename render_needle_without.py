@@ -95,7 +95,7 @@ def render(config):
     
     needles = [31,32,33,34,3,10]
 
-    dataset_name = 'needle_target'
+    dataset_name = config["dataset_name"]
 
 
     sets_path = os.path.join(config["output_dir"], 'bop_data', dataset_name, "train_pbr")

@@ -9,6 +9,7 @@ import numpy as np
 import yaml
 import sys
 import imageio
+import random
 # from multiprocessing import Process, Queue
 
 # from v4r.bproc_to_bop import complete_dataset_to_bop
@@ -22,12 +23,6 @@ import imageio
 # TODO fix bump and physics simulTION CENTER OF MASS
 # TODO ALPHA
 # TODO if bop Dataset dosesn nopt have info generate info
-
-
-# class needle(IntEnum):
-#     CAP = 4
-#     WITH = 8
-#     WITHOUT = 3
 
 
 def get_bounding_box_diameter(obj):
@@ -90,13 +85,25 @@ def render(config):
 
     target_objs = []
     distractor_objs = []
-
-    exclude = [81,82,83,84,9,8] #needle with cap
     
-    needles = [31,32,33,34,3,10]
+    ns1 = [31, 81]
+    ns2 = [32, 82]
+    ns3 = [33, 83]
+    ns4 = [34, 84]
+    ns0 = [3, 8]
+    ns5 = [9, 10]
+    ns0_list = []
+    ns1_list = []
+    ns2_list = []
+    ns3_list = []
+    ns4_list = []
+    ns5_list = []
 
-    dataset_name = 'needle_target'
+    cap = [4]
+    with_cap = [81,82,83,84,8,9]
+    without_cap = [31,32,33,34,3,10]
 
+    dataset_name = config["dataset_name"]
 
     sets_path = os.path.join(config["output_dir"], 'bop_data', dataset_name, "train_pbr")
     if os.path.isdir(sets_path):
@@ -121,17 +128,35 @@ def render(config):
             raise Exception("filename needs to be in format obj_xxxxxx.stl, where xxxxxx is 0 padded number smaller than 230")
         if id not in category_ids:
             obj.hide(True) 
-            if id not in exclude:
-                category_ids.append(id)
-                obj.set_cp("category_id", id)
-                id_mapping[filename] = id
-                obj.set_shading_mode('auto')
-                if id in needles:
-                    target_objs.append(obj)
-                else:
-                    distractor_objs.append(obj)
+            category_ids.append(id)
+            obj.set_cp("category_id", id)
+            id_mapping[filename] = id
+            obj.set_shading_mode('auto')
+            if id == 4:
+                ns0_list.append(obj)
+                ns1_list.append(obj)
+                ns2_list.append(obj)
+                ns3_list.append(obj)
+                ns4_list.append(obj)
+                ns5_list.append(obj)
+            if id in ns1:
+                ns1_list.append(obj)
+            elif id in ns2:
+                ns2_list.append(obj)
+            elif id in ns3:
+                ns3_list.append(obj)
+            elif id in ns4:
+                ns4_list.append(obj)
+            elif id in ns5:
+                ns5_list.append(obj)
+            elif id in ns0:
+                ns0_list.append(obj)
+            else:
+                distractor_objs.append(obj)
         else:
             raise Exception("filename needs to be in format obj_xxxxxx.stl, where xxxxxx is 0 padded number smaller than 255")
+
+    needle_lists = [ns0_list, ns1_list, ns2_list, ns3_list, ns4_list, ns5_list]
 
     #load bop Datatsets
     bop_datasets = {}
@@ -182,9 +207,16 @@ def render(config):
                                                 config["cam"]["height"])
     
     for i in range(config["num_scenes"]):
+        n = random.randint(0, 5)
+        target_needle_parts = needle_lists[n]#.copy()
+
+        for part in target_needle_parts:
+            if part.get_cp("category_id") in with_cap:
+                target_needle = part
+
 
         # Sample bop objects for a scene
-        sampled_target_objs = list(np.random.choice(target_objs, size=1, replace=False))
+        #sampled_target_objs = list(np.random.choice(target_objs, size=1, replace=False))
         sampled_distractor_bop_objs = []
         sampled_distractor_bop_objs += list(np.random.choice(distractor_objs, size=3, replace=False))
         for bop_dataset in bop_datasets.values():
@@ -192,7 +224,7 @@ def render(config):
             sampled_distractor_bop_objs += list(np.random.choice(bop_dataset, size=dist_per_datatset, replace=False))
 
         # Randomize materials and set physics
-        for obj in (sampled_target_objs + sampled_distractor_bop_objs):
+        for obj in (sampled_distractor_bop_objs+[target_needle]):
             obj = set_material_properties(obj, cc_textures)
         
         # Sample two light sources
@@ -213,7 +245,7 @@ def render(config):
 
 
         # Sample object poses and check collisions 
-        bproc.object.sample_poses(objects_to_sample = sampled_target_objs + sampled_distractor_bop_objs,
+        bproc.object.sample_poses(objects_to_sample = sampled_distractor_bop_objs + [target_needle],
                                 sample_pose_func = sample_pose_func, 
                                 max_tries = 1000)
                 
@@ -226,8 +258,19 @@ def render(config):
                                         origin_mode="CENTER_OF_MASS")
 
 
+        pose_tmat = target_needle.get_local2world_mat()
+        target_needle.disable_rigidbody()
+        target_needle.hide(True)
+
+        parts = []
+        for part in target_needle_parts:
+            if part.get_cp("category_id") not in with_cap:
+                part.set_local2world_mat(pose_tmat)
+                part = set_material_properties(part, cc_textures)   
+                parts.append(part)        
+
         # BVH tree used for camera obstacle checks
-        bop_bvh_tree = bproc.object.create_bvh_tree_multi_objects(sampled_target_objs + sampled_distractor_bop_objs)
+        bop_bvh_tree = bproc.object.create_bvh_tree_multi_objects(sampled_distractor_bop_objs+parts)
 
         cam_poses = 0
         
@@ -239,7 +282,7 @@ def render(config):
                                     elevation_min = config["cam"]["elevation_min"],
                                     elevation_max = config["cam"]["elevation_max"])
             # Determine point of interest in scene as the object closest to the mean of a subset of objects
-            poi = bproc.object.compute_poi(np.concatenate((np.random.choice(sampled_distractor_bop_objs, size=max(1, len(sampled_distractor_bop_objs)-2), replace=False), np.array(sampled_target_objs))))
+            poi = bproc.object.compute_poi(np.concatenate((np.random.choice(sampled_distractor_bop_objs, size=max(1, len(sampled_distractor_bop_objs)-2), replace=False), np.array(parts))))
             # Compute rotation based on vector going from location towards poi
             rotation_matrix = bproc.camera.rotation_from_forward_vec(poi - location, inplane_rot=np.random.uniform(-np.pi/2.0, np.pi/2.0))
             # Add homog cam pose based on location an rotation
@@ -257,7 +300,7 @@ def render(config):
         # Write data in bop format
         
         bproc.writer.write_bop(os.path.join(config["output_dir"], 'bop_data'),
-                            target_objects = sampled_target_objs,
+                            target_objects = parts,
                             dataset = dataset_name,
                             depth_scale = 0.1,
                             depths = data["depth"],
@@ -278,7 +321,7 @@ def render(config):
         for segmap in data["class_segmaps"]:
             imageio.imwrite(os.path.join(segmap_path, f"{segmap_idx:06}.png"),np.array(segmap))
             segmap_idx += 1 
-        for obj in (sampled_target_objs + sampled_distractor_bop_objs):      
+        for obj in (parts + sampled_distractor_bop_objs):      
             obj.disable_rigidbody()
             obj.hide(True)
 
