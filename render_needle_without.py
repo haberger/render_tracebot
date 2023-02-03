@@ -91,7 +91,7 @@ def render(config):
     target_objs = []
     distractor_objs = []
 
-    exclude = [81,82,83,84,9,8] #needle with cap
+    exclude = [81,82,83,84,9,8,4] #needle with cap
     
     needles = [31,32,33,34,3,10]
 
