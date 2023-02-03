@@ -3,7 +3,7 @@ output_dir: "/home/david/render_tracebot/output"
 models_dir: "/home/david/render_tracebot/models"
 dataset_name: "needle_with_cap_filter_variation"
 num_scenes: 40
-img_per_scene: 2
+img_per_scene: 25
 
 cam:
   height: 720

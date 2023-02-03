@@ -112,8 +112,9 @@ def render(config):
         segmap_path = os.path.join(sets_path, set_path, "segmap")
 
         saved_maps = sorted(os.listdir(segmap_path))
-        if len(saved_maps) != 0:
+        if len(saved_maps) != 0 and int(saved_maps[-1][:-4]) != 999:
             segmap_idx = int(saved_maps[-1][:-4])+1
+            print(saved_maps)
         else:
             segmap_idx = 0
     else:
@@ -282,7 +283,7 @@ def render(config):
                                     elevation_min = config["cam"]["elevation_min"],
                                     elevation_max = config["cam"]["elevation_max"])
             # Determine point of interest in scene as the object closest to the mean of a subset of objects
-            poi = bproc.object.compute_poi(np.concatenate((np.random.choice(sampled_distractor_bop_objs, size=max(1, len(sampled_distractor_bop_objs)-2), replace=False), np.array(parts))))
+            poi = bproc.object.compute_poi(np.concatenate((np.random.choice(sampled_distractor_bop_objs, size=max(1, len(sampled_distractor_bop_objs)-1), replace=False), np.array(parts))))
             # Compute rotation based on vector going from location towards poi
             rotation_matrix = bproc.camera.rotation_from_forward_vec(poi - location, inplane_rot=np.random.uniform(-np.pi/2.0, np.pi/2.0))
             # Add homog cam pose based on location an rotation
