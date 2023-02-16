@@ -1,4 +1,7 @@
 textures
-models
+bop_dataset/
+models/
+output/
 bop_dataset
+models
 output
