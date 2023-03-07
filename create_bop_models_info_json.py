@@ -7,31 +7,32 @@ import open3d as o3d
 import trimesh
 import json
 
-# parser = argparse.ArgumentParser()
-# parser.add_argument('config_path', default="config.yaml", help="Path to config file")
-# args = parser.parse_args()
+parser = argparse.ArgumentParser()
+parser.add_argument('config_path', default="config.yaml", help="Path to config file")
+args = parser.parse_args()
 
 dirname = os.path.dirname(__file__) #TODO
 #dirname = "/home/v4r/David/BlenderProc"
 
-# with open(os.path.join(dirname, args.config_path), "r") as stream:
-#     config = yaml.safe_load(stream)
+with open(os.path.join(dirname, args.config_path), "r") as stream:
+    config = yaml.safe_load(stream)
 
-# mesh_dir = os.path.join(dirname, config["objects"]["models_dir"])
+mesh_dir = os.path.join(dirname, config["models_dir"])
 
 
 
-# target_bop_objs = []
-# for filename in os.listdir(mesh_dir):
-#     if filename in config["objects"]["target"]:
-#         path = os.path.join(mesh_dir, filename)
-#         #path = "/media/v4r/My Passport/BlenderProc1/bop_dataset/lm/models/obj_000001.ply"
-#         obj = trimesh.load(path)
-#         target_bop_objs.append(obj) 
-#         print(filename)
-#         #exit
-obj = trimesh.load("/home/v4r/David/models/obj_000008.stl")
-target_bop_objs = [obj]
+target_bop_objs = []
+for filename in sorted(os.listdir(mesh_dir)):
+    if filename[-3:] == 'stl':
+        path = os.path.join(mesh_dir, filename)
+        print(path)
+        #path = "/media/v4r/My Passport/BlenderProc1/bop_dataset/lm/models/obj_000001.ply"
+        obj = trimesh.load(path)
+        target_bop_objs.append(obj) 
+        print(filename)
+        #exit
+# obj = trimesh.load("/home/v4r/David/models/obj_000008.stl")
+# target_bop_objs = [obj]
 models_info = dict()
 
 for oi, obj in enumerate(target_bop_objs):

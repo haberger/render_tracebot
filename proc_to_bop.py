@@ -3,6 +3,7 @@
 import os 
 import json
 import bop_renderer
+import pyrender
 import numpy as np
 import cv2
 import sys

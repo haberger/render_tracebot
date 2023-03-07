@@ -1,5 +1,5 @@
 texture_dir: "/media/david/My Passport/v4r/textures"
-output_dir: "/home/david/render_tracebot/output"
+output_dir: "/media/david/My Passport/out1"
 models_dir: "/home/david/render_tracebot/models"
 dataset_name: "needle_without_cap_filter_variation"
 num_scenes: 40

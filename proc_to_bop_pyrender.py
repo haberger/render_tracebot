@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 import cv2
 import os 
-# os.environ['PYOPENGL_PLATFORM'] = 'egl'
-# #!PYOPENGL_PLATFORM=egl python -c "from OpenGL import EGL"
-# print(os.environ['PYOPENGL_PLATFORM']) 
 import json
 import pyrender
 import numpy as np
@@ -186,6 +183,9 @@ def complete_dataset_to_bop(set_dir=None, q = None):
             else: 
                 visib_fract = 0
 
+            if visib_fract > 1:
+                visib_fract = 1.0
+
             bbox_obj = calc_boundingbox_from_mask(mask)
             bbox_visib = calc_boundingbox_from_mask(occlusion_mask)
 
@@ -209,8 +209,7 @@ def complete_dataset_to_bop(set_dir=None, q = None):
     return
 
 if __name__ == "__main__":
-    # bop_renderer_path = '/home/v4r/David/bop_renderer/build'
-    root_path = "/home/david/render_tracebot/output/bop_data/needle_without_cap_filter_variation"
+    root_path = "/home/david/render_tracebot/output/bop_data/test"
     sets_path = os.path.join(root_path, 'train_pbr')
     for set in sorted(os.listdir(sets_path)):
         print(set)
