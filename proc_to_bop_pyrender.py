@@ -8,6 +8,8 @@ import sys
 import trimesh
 import matplotlib.pyplot as plt
 import timeit
+import argparse
+import yaml
 
 
 def lookAt(eye, target, up):
@@ -209,7 +211,18 @@ def complete_dataset_to_bop(set_dir=None, q = None):
     return
 
 if __name__ == "__main__":
-    root_path = "/home/david/render_tracebot/output/bop_data/test"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('config_path', default="config.yaml", help="Path to config file")
+    args = parser.parse_args()
+
+    dirname = os.path.dirname(__file__) #TODO
+    #dirname = "/home/v4r/David/BlenderProc"
+
+    #read config
+    with open(os.path.join(dirname, args.config_path), "r") as stream:
+        config = yaml.safe_load(stream)
+    root_path = os.path.join(config["output_dir"], "bop_data",config["dataset_name"])
+
     sets_path = os.path.join(root_path, 'train_pbr')
     for set in sorted(os.listdir(sets_path)):
         print(set)
