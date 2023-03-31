@@ -1,5 +1,6 @@
 1. install miniconda
-[](https://docs.conda.io/en/latest/miniconda.html#)
+
+[Link to website](https://docs.conda.io/en/latest/miniconda.html#)
 
 2.  build and activate conda env
 ```
