@@ -1,11 +1,27 @@
-1.  build and activate conda env
+1. install miniconda
+[](https://docs.conda.io/en/latest/miniconda.html#)
+
+2.  build and activate conda env
 ```
 conda env create -f env.yml
 conda activate render_tracebot
 ```
 
-2. set paths in render_cfg.yaml
-3. run render.py
+3. setup render_cfg.yaml
+
+4. if models_info.json does not exist call
 ```
-blenderproc run render.py render_cfg.yaml
+python create_bop_models_info_json.py render_cfg.yaml 
+```
+
+5. start rendering
+
+ - Only rgb and depth
+```
+blenderproc run render_base.py render_cfg.yaml
+```
+
+- full bop_pipeline
+```
+./run.sh
 ```

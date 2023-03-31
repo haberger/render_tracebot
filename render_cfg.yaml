@@ -1,8 +1,8 @@
-texture_dir: "/home/david/render_tracebot/textures_sample"
-output_dir: "/home/david/render_tracebot/output"
-models_dir: "/home/david/render_tracebot/models"
-dataset_name: "test"
-num_scenes: 40
+texture_dir: "/home/david/render_tracebot/textures_sample" # path to textures download via "blenderproc download cc_textures"
+output_dir: "/home/david/render_tracebot/output" #path to result directory
+models_dir: "/home/david/render_tracebot/models" #path to stl files
+dataset_name: "test_superresolution" #dataset_name
+num_scenes: 40 
 img_per_scene: 25
 
 cam:
@@ -25,12 +25,12 @@ cam:
   sensor_width: 2.7288
 
 distractions:
-  bop_datasets_path: "/home/david/render_tracebot/bop_dataset"
-  bop_datasets:
+  bop_datasets_path: "/home/david/render_tracebot/bop_dataset" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
+  bop_datasets: #datasets to load distractors from
     - "tless"
     - "ycbv"
     # - "lm"
-  num_distractions: 2
-  max_size: 0.25
+  num_distractions: 2 #anumber of distractors per bop dataset
+  max_size: 0.25 #biggest allowed size(diagonal of bounding box) the objects are allowed to be. In m
 
 

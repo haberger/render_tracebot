@@ -16,7 +16,6 @@ import shutil
 # TODO ALPHA
 # TODO if bop Dataset dosesn nopt have info generate info
 
-
 def get_bounding_box_diameter(obj):
     bound_box = obj.get_bound_box().real
     p1 = bound_box[0]
@@ -98,7 +97,6 @@ def render(config):
     target_path = os.path.join(config['output_dir'], 'bop_data', dataset_name, 'models')
     if not os.path.isdir(target_path):
         shutil.copytree(config['models_dir'], target_path)
-
 
     for filename in os.listdir(mesh_dir): #TODO mm2m stl/ply
         if filename[-3:] != "stl":
@@ -222,7 +220,7 @@ def render(config):
                                     elevation_min = config["cam"]["elevation_min"],
                                     elevation_max = config["cam"]["elevation_max"])
             # Determine point of interest in scene as the object closest to the mean of a subset of objects
-            poi = bproc.object.compute_poi(np.random.choice(sampled_target_objs, size=max(1, len(sampled_target_objs)-1), replace=False))
+            poi = bproc.object.compute_poi(np.random.choice(sampled_target_objs, size=max(1, len(sampled_target_objs)-1), replace=False)) #
             # Compute rotation based on vector going from location towards poi
             rotation_matrix = bproc.camera.rotation_from_forward_vec(poi - location, inplane_rot=np.random.uniform(-np.pi/2.0, np.pi/2.0))
             # Add homog cam pose based on location an rotation
