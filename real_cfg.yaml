@@ -1,0 +1,25 @@
+blend_dir: "/home/david/tracebot-management/TraceBotMeshesRealistic/needle/needle.blend" #path to stl files
+output_dir: "/home/david/render_tracebot/real_needle/" #path to result directory
+dataset_name: "needle_realistic" #dataset_name
+stepsize: 5
+
+cam:
+  height: 720
+  width: 1280
+  K:
+    - 909.9260864257812
+    - 0.0 
+    - 643.5625
+    - 0.0
+    - 907.9168701171875
+    - 349.0171813964844
+    - 0.0
+    - 0.0
+    - 1.0
+  radius_min: 0.30
+  radius_max: 1.2
+  elevation_min: 5 #5
+  elevation_max: 89
+  sensor_width: 2.7288
+
+
