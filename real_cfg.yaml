@@ -1,7 +1,8 @@
 blend_dir: "/home/david/tracebot-management/TraceBotMeshesRealistic/needle/needle.blend" #path to stl files
 output_dir: "/home/david/render_tracebot/real_needle/" #path to result directory
-dataset_name: "needle_realistic" #dataset_name
-stepsize: 5
+dataset_name: "needle_realistic_with_cap_filter_00" #dataset_name
+models_dir: "/home/david/render_tracebot/real_needle/bop_data/needle_realistic_with_cap_filter/models"
+stepsize: 15
 
 cam:
   height: 720
