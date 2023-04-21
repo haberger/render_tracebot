@@ -17,7 +17,7 @@ def render(config):
 
     bproc.init()
 
-    dataset = "lm"
+    dataset = "ycbv"
     bop_datasets_path = config["bop_dir"]
     bop_dataset_path = os.path.join(bop_datasets_path, dataset)
     bop_objects = bproc.loader.load_bop_objs(
