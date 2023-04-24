@@ -1,8 +1,8 @@
 1. install miniconda
 
-[Link to website](https://docs.conda.io/en/latest/miniconda.html#)
+[miniconda](https://docs.conda.io/en/latest/miniconda.html#)
 
-2.  build and activate conda env
+1.  build and activate conda env
 ```
 conda env create -f env.yml
 conda activate render_tracebot
