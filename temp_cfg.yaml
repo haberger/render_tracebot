@@ -1,6 +1,7 @@
-output_dir: "/media/lexi/Sasha_external/David/BOP_Datasets" #path to result directory
+output_dir: "/home/david/work/out/" #path to result directory
 dataset_name: "ycbv_templates" #dataset_name
-bop_dir: "/media/lexi/Sasha_external/David"
+bop_dir: "/home/david/work/bop_dataset/" #path to bop datasets parent folder
+bop_dataset: "ycbv"
 stepsize: 5
 
 cam:
@@ -16,10 +17,4 @@ cam:
     - 0.0
     - 0.0
     - 1.0
-  radius_min: 0.30
-  radius_max: 1.2
-  elevation_min: 5 #5
-  elevation_max: 89
-  sensor_width: 2.7288
-
 

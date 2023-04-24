@@ -17,8 +17,24 @@ def render(config):
 
     bproc.init()
 
-    dataset = "ycbv"
+    dataset = config["bop_dataset"]
     bop_datasets_path = config["bop_dir"]
+
+    if dataset in ["ycbv", "lm", "tyol", "hb", "icbin", "itodd", "tud1"]:
+        bop_dataset_path = os.path.join(bop_datasets_path, dataset)
+        bop_objects = bproc.loader.load_bop_objs(
+            bop_dataset_path = bop_dataset_path, 
+            mm2m = True)
+    elif dataset in ["tless"]:
+        bop_dataset_path = os.path.join(bop_datasets_path, dataset)
+        bop_objects = bproc.loader.load_bop_objs(
+            bop_dataset_path = bop_dataset_path, 
+            model_type = 'cad', 
+            mm2m = True)
+    else:
+        raise Exception(f"BOP Dataset \"{dataset}\" not supported")
+
+
     bop_dataset_path = os.path.join(bop_datasets_path, dataset)
     bop_objects = bproc.loader.load_bop_objs(
         bop_dataset_path = bop_dataset_path, 
