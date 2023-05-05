@@ -27,8 +27,8 @@ cam:
 distractions:
   bop_datasets_path: "/home/david/render_tracebot/bop_dataset" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
   bop_datasets: #datasets to load distractors from
-    - "tless"
-    - "ycbv"
+    # - "tless"
+    # - "ycbv"
     # - "lm"
   num_distractions: 2 #anumber of distractors per bop dataset
   max_size: 0.25 #biggest allowed size(diagonal of bounding box) the objects are allowed to be. In m

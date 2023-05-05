@@ -127,7 +127,7 @@ def calc_boundingbox_from_mask(mask):
         bbox = [int(0), int(0), int(0), int(0)]
     return bbox
 
-def complete_dataset_to_bop(set_dir=None, q = None):
+def complete_dataset_to_bop(set_dir=None, segmap=True):
 
     root_dir = os.path.dirname(os.path.dirname(set_dir))
     mesh_dir = os.path.join(root_dir, "models")
@@ -227,6 +227,6 @@ if __name__ == "__main__":
     for set in sorted(os.listdir(sets_path)):
         print(set)
         start = timeit.default_timer()
-        complete_dataset_to_bop(os.path.join(sets_path, set))
+        complete_dataset_to_bop(os.path.join(sets_path, set), segmap=False)
         stop = timeit.default_timer()
         print('Time: ', stop - start)  

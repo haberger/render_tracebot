@@ -1,6 +1,6 @@
-output_dir: "/media/lexi/Sasha_external/David/BOP_Datasets" #path to result directory
-dataset_name: "ycbv_templates" #dataset_name
-bop_dir: "/media/lexi/Sasha_external/David"
+output_dir: "/home/david/test" #path to result directory
+dataset_name: "ycbv_templatessss_test" #dataset_name
+bop_dir: "/media/david/Roadies2_Temp/BOP_Datasets"
 stepsize: 5
 
 cam:
