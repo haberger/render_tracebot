@@ -16,10 +16,4 @@ cam:
     - 0.0
     - 0.0
     - 1.0
-  radius_min: 0.30
-  radius_max: 1.2
-  elevation_min: 5 #5
-  elevation_max: 89
-  sensor_width: 2.7288
-
 
