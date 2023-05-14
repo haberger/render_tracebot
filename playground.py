@@ -36,11 +36,7 @@ def set_material_properties(obj, cc_textures):
         obj.hide(False)
         return obj
 
-def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size, category_ids, id_mapping): #TODO distractor or no distracotr
-    id = max(231, max(category_ids)+1)
-    category_ids.append(id)
-    id_mapping[f"{dataset}_distractors"] = id
-
+def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size): #TODO distractor or no distracotr
     if dataset in ["ycbv", "lm", "tyol", "hb", "icbin", "itodd", "tud1"]:
         bop_dataset_path = os.path.join(bop_datasets_path, dataset)
         bop_dataset = bproc.loader.load_bop_objs(
@@ -61,23 +57,134 @@ def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size, categor
         if max_size:
             if get_bounding_box_diameter(bop_obj) <= max_size:
                 distractor_objs.append(bop_obj)
-        bop_obj.set_cp("category_id", id)
     return distractor_objs   
 
 
 
+def load_needle(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    needle = {}
+    needle['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'needle':
+            needle['whole'] = obj
+        else:
+            needle['parts'].append(obj)
+        obj.set_cp("category_id", 5)
+        model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    
+    tracebot_objs["needle"] = needle
+    return tracebot_objs
+
+def load_white_clamp(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    white_clamp = {}
+    white_clamp['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'clamp_w':
+            white_clamp['whole'] = obj
+        else:
+            white_clamp['parts'].append(obj)
+        obj.set_cp("category_id", 6)
+        model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["white_clamp"] = white_clamp
+
+    return tracebot_objs    
+
+def load_red_clamp(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    red_clamp = {}
+    red_clamp['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'clamp_r':
+            red_clamp['whole'] = obj
+        else:
+            red_clamp['parts'].append(obj)
+        obj.set_cp("category_id", 7)
+        model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    tracebot_objs["red_clamp"] = red_clamp
+    return tracebot_objs  
+
+def load_red_cap(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    red_cap = {}
+    red_cap['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'red_cap':
+            red_cap['whole'] = obj
+        else:
+            red_cap['parts'].append(obj)
+        obj.set_cp("category_id", 8)
+        model_path = os.path.join(config['models_dir'], 'red_cap', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    tracebot_objs["red_cap"] = red_cap
+    return tracebot_objs  
+
+def load_yellow_cap(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    yellow_cap = {}
+    yellow_cap['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'yellow_cap':
+            yellow_cap['whole'] = obj
+        else:
+            yellow_cap['parts'].append(obj)
+        obj.set_cp("category_id", 9)
+        model_path = os.path.join(config['models_dir'], 'yellow_cap', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    tracebot_objs["yellow_cap"] = yellow_cap
+    return tracebot_objs  
+
+def load_canister(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    canister = {}
+    canister['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'canister':
+            canister['whole'] = obj
+        else:
+            canister['parts'].append(obj)
+        obj.set_cp("category_id", 10)
+        model_path = os.path.join(config['models_dir'], 'canister', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["canister"] = canister
+
+    return tracebot_objs    
 
 def render(config):
 
     bproc.init()
 
-    mesh_dir = os.path.join(dirname, config["models_dir"])
-
-    category_ids = []
-    id_mapping = {}
-
-    target_objs = []
-    distractor_objs = []
+    # mesh_dir = os.path.join(dirname, config["models_dir"])
 
     dataset_name = config["dataset_name"]
 
@@ -85,27 +192,27 @@ def render(config):
     if not os.path.isdir(target_path):
         shutil.copytree(config['models_dir'], target_path)
 
-    objs = bproc.loader.load_blend('/home/david/tracebot-management/TraceBotMeshesRealistic/needle/needle.blend')
-
-    needle = objs[len(objs)-2]
-    neelde_parts = objs[0:-2]
-    print(needle.get_name())
-    for p in neelde_parts:
-        print(p.get_name())
-        
-
+    tracebot = {}
+    tracebot = load_needle(tracebot, os.path.join(config["models_dir"], 'needle/needle.blend'))
+    tracebot = load_red_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_red.blend'))
+    tracebot = load_white_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_white.blend'))
+    tracebot = load_red_cap(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
+    tracebot = load_yellow_cap(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
+    tracebot = load_canister(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
 
 
     # print(cap.get_location())
     bop_datasets = {}
-    for bop_dataset in config["distractions"]["bop_datasets"]:
-        dataset = load_bop_dataset_as_distractor(
-            config["distractions"]["bop_datasets_path"], 
-            bop_dataset, 
-            config["distractions"]["max_size"], 
-            category_ids, 
-            id_mapping)
-        bop_datasets[bop_dataset] = dataset
+    print(config["distractions"]["bop_datasets"])
+    if config["distractions"]["bop_datasets"] != None:
+        for bop_dataset in config["distractions"]["bop_datasets"]:
+            dataset = load_bop_dataset_as_distractor(
+                config["distractions"]["bop_datasets_path"], 
+                bop_dataset, 
+                config["distractions"]["max_size"])
+            bop_datasets[bop_dataset] = dataset
+
+    # exit()
 
     # create room
     room_size = max(config["cam"]["radius_max"] * 1.1, 2)
@@ -139,6 +246,13 @@ def render(config):
     # activate depth rendering without antialiasing and set amount of samples for color rendering
     bproc.renderer.enable_depth_output(activate_antialiasing=False)
     bproc.renderer.set_max_amount_of_samples(50)
+    max_bounces = 10
+    bproc.renderer.set_light_bounces(
+        glossy_bounces=max_bounces, 
+        max_bounces=max_bounces, 
+        transmission_bounces=max_bounces, 
+        transparent_max_bounces=max_bounces, 
+        volume_bounces=max_bounces)
 
     bproc.camera.set_intrinsics_from_K_matrix(np.reshape(config["cam"]["K"], (3, 3)), 
                                                 config["cam"]["width"], 
@@ -147,14 +261,16 @@ def render(config):
     for i in range(config["num_scenes"]):
 
         # Sample bop objects for a scene
-        sampled_target_objs = list(np.random.choice(target_objs, size=len(target_objs), replace=False))
+        sampled_target_objs = list(np.random.choice(list(tracebot.keys()), size=len(tracebot.keys()), replace=False))
         sampled_distractor_bop_objs = []
         for bop_dataset in bop_datasets.values():
             dist_per_datatset = min(config["distractions"]["num_distractions"], len(bop_dataset))
             sampled_distractor_bop_objs += list(np.random.choice(bop_dataset, size=dist_per_datatset, replace=False))
+        print(sampled_target_objs)
+        tracebot_full_body = [tracebot[obj]['whole'] for obj in sampled_target_objs]
 
         # Randomize materials and set physics
-        for obj in (sampled_distractor_bop_objs+sampled_target_objs):
+        for obj in (sampled_distractor_bop_objs + tracebot_full_body):
             obj = set_material_properties(obj, cc_textures)
         
         # Sample two light sources
@@ -174,8 +290,10 @@ def render(config):
             mat.set_principled_shader_value("Alpha", 1.0)
 
 
+        # tracebot_full_body = [tracebot[obj]['whole'] for obj in sampled_target_objs]
+
         # Sample object poses and check collisions 
-        bproc.object.sample_poses(objects_to_sample = sampled_distractor_bop_objs + sampled_target_objs,
+        bproc.object.sample_poses(objects_to_sample = sampled_distractor_bop_objs + tracebot_full_body,
                                 sample_pose_func = sample_pose_func, 
                                 max_tries = 1000)
                 
@@ -189,7 +307,20 @@ def render(config):
    
 
         # BVH tree used for camera obstacle checks
-        bop_bvh_tree = bproc.object.create_bvh_tree_multi_objects(sampled_distractor_bop_objs+sampled_target_objs)
+        bop_bvh_tree = bproc.object.create_bvh_tree_multi_objects(sampled_distractor_bop_objs+tracebot_full_body)
+
+
+        parts = []
+        for obj in sampled_target_objs:
+            whole_obj = tracebot[obj]['whole']
+            pose_tmat = whole_obj.get_local2world_mat()
+            whole_obj.disable_rigidbody()
+            whole_obj.hide(True)
+            for part in tracebot[obj]['parts']:
+                part.set_local2world_mat(pose_tmat)
+                part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
+                part.hide(False) 
+                parts.append(part)
 
         cam_poses = 0
         
@@ -201,7 +332,7 @@ def render(config):
                                     elevation_min = config["cam"]["elevation_min"],
                                     elevation_max = config["cam"]["elevation_max"])
             # Determine point of interest in scene as the object closest to the mean of a subset of objects
-            poi = bproc.object.compute_poi(np.random.choice(sampled_target_objs, size=max(1, len(sampled_target_objs)-1), replace=False)) #
+            poi = bproc.object.compute_poi(np.random.choice(tracebot_full_body, size=max(1, len(tracebot_full_body)-1), replace=False)) #
             # Compute rotation based on vector going from location towards poi
             rotation_matrix = bproc.camera.rotation_from_forward_vec(poi - location, inplane_rot=np.random.uniform(-np.pi/2.0, np.pi/2.0))
             # Add homog cam pose based on location an rotation
@@ -214,12 +345,10 @@ def render(config):
                 cam_poses += 1
         # render the whole pipeline
         data = bproc.renderer.render()
-        data.update(bproc.renderer.render_segmap(map_by=["class"]))
-        
+
         # Write data in bop format
-        
         bproc.writer.write_bop(os.path.join(config["output_dir"], 'bop_data'),
-                            target_objects = target_objs,
+                            target_objects = tracebot_full_body,
                             dataset = dataset_name,
                             depth_scale = 0.1,
                             depths = data["depth"],
@@ -227,7 +356,7 @@ def render(config):
                             color_file_format = "JPEG",
                             ignore_dist_thres = 10)
 
-        for obj in (sampled_target_objs + sampled_distractor_bop_objs):      
+        for obj in (parts + sampled_distractor_bop_objs):      
             obj.disable_rigidbody()
             obj.hide(True)
 

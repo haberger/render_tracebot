@@ -1,9 +1,9 @@
-texture_dir: "/home/david/render_tracebot/textures_sample" # path to textures download via "blenderproc download cc_textures"
-output_dir: "/home/david/render_tracebot/output" #path to result directory
-models_dir: "/home/david/render_tracebot/models" #path to stl files
+texture_dir: "/home/david/work/textures_samples" # path to textures download via "blenderproc download cc_textures"
+output_dir: "/home/david/work/render_tracebot/output" #path to result directory
+models_dir: "/home/david/work/tracebot-management/TraceBotMeshesRealistic" #path to stl files
 dataset_name: "test_superresolution" #dataset_name
 num_scenes: 40 
-img_per_scene: 25
+img_per_scene: 1
 
 cam:
   height: 720
@@ -19,13 +19,13 @@ cam:
     - 0.0
     - 1.0
   radius_min: 0.30
-  radius_max: 1.2
-  elevation_min: 5 #5
+  radius_max: 1
+  elevation_min: 40 #5
   elevation_max: 89
   sensor_width: 2.7288
 
 distractions:
-  bop_datasets_path: "/home/david/render_tracebot/bop_dataset" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
+  bop_datasets_path: "/home/david/work/bop_dataset" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
   bop_datasets: #datasets to load distractors from
     # - "tless"
     # - "ycbv"
