@@ -180,6 +180,66 @@ def load_canister(tracebot_objs, path):
 
     return tracebot_objs    
 
+def load_small_bottle(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    small_bottle = {}
+    small_bottle['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'small_bottle':
+            small_bottle['whole'] = obj
+        else:
+            small_bottle['parts'].append(obj)
+        obj.set_cp("category_id", 12)
+        model_path = os.path.join(config['models_dir'], 'small_bottle', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["small_bottle"] = small_bottle
+    return tracebot_objs  
+
+def load_medium_bottle(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    medium_bottle = {}
+    medium_bottle['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'medium_bottle':
+            medium_bottle['whole'] = obj
+        else:
+            medium_bottle['parts'].append(obj)
+        obj.set_cp("category_id", 13)
+        model_path = os.path.join(config['models_dir'], 'medium_bottle', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["medium_bottle"] = medium_bottle
+    return tracebot_objs  
+
+def load_large_bottle(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    large_bottle = {}
+    large_bottle['parts'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'large_bottle':
+            large_bottle['whole'] = obj
+        else:
+            large_bottle['parts'].append(obj)
+        obj.set_cp("category_id", 14)
+        model_path = os.path.join(config['models_dir'], 'large_bottle', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["large_bottle"] = large_bottle
+    return tracebot_objs 
+
 def render(config):
 
     bproc.init()
@@ -199,6 +259,9 @@ def render(config):
     tracebot = load_red_cap(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
     tracebot = load_yellow_cap(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
     tracebot = load_canister(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
+    tracebot = load_small_bottle(tracebot, os.path.join(config["models_dir"], 'small_bottle/small_bottle.blend'))
+    tracebot = load_large_bottle(tracebot, os.path.join(config["models_dir"], 'large_bottle/large_bottle.blend'))
+    tracebot = load_medium_bottle(tracebot, os.path.join(config["models_dir"], 'medium_bottle/medium_bottle.blend'))
 
 
     # print(cap.get_location())
