@@ -59,13 +59,12 @@ def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size): #TODO 
                 distractor_objs.append(bop_obj)
     return distractor_objs   
 
-
-
 def load_needle(tracebot_objs, path):
     objs = bproc.loader.load_blend(path)
 
     needle = {}
     needle['parts'] = []
+    needle['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
@@ -73,11 +72,24 @@ def load_needle(tracebot_objs, path):
         elif name == 'needle':
             needle['whole'] = obj
         else:
-            needle['parts'].append(obj)
-        obj.set_cp("category_id", 5)
-        model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    
+            if name == 'needle_without':
+                needle['annos'].append(obj)
+                obj.set_cp("category_id", 5)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap':
+                needle['annos'].append(obj)
+                needle['parts'].append(obj)
+                obj.set_cp("category_id", 20)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle['parts'].append(obj)
+                obj.set_cp("category_id", 5)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
     tracebot_objs["needle"] = needle
     return tracebot_objs
 
@@ -86,12 +98,14 @@ def load_white_clamp(tracebot_objs, path):
 
     white_clamp = {}
     white_clamp['parts'] = []
+    white_clamp['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'clamp_w':
             white_clamp['whole'] = obj
+            white_clamp['annos'].append(obj)
         else:
             white_clamp['parts'].append(obj)
         obj.set_cp("category_id", 6)
@@ -107,12 +121,14 @@ def load_red_clamp(tracebot_objs, path):
 
     red_clamp = {}
     red_clamp['parts'] = []
+    red_clamp['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'clamp_r':
             red_clamp['whole'] = obj
+            red_clamp['annos'].append(obj)
         else:
             red_clamp['parts'].append(obj)
         obj.set_cp("category_id", 7)
@@ -126,12 +142,14 @@ def load_red_cap(tracebot_objs, path):
 
     red_cap = {}
     red_cap['parts'] = []
+    red_cap['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'red_cap':
             red_cap['whole'] = obj
+            red_cap['annos'].append(obj)
         else:
             red_cap['parts'].append(obj)
         obj.set_cp("category_id", 8)
@@ -145,12 +163,14 @@ def load_yellow_cap(tracebot_objs, path):
 
     yellow_cap = {}
     yellow_cap['parts'] = []
+    yellow_cap['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'yellow_cap':
             yellow_cap['whole'] = obj
+            yellow_cap['annos'].append(obj)
         else:
             yellow_cap['parts'].append(obj)
         obj.set_cp("category_id", 9)
@@ -164,12 +184,14 @@ def load_canister(tracebot_objs, path):
 
     canister = {}
     canister['parts'] = []
+    canister['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'canister':
             canister['whole'] = obj
+            canister['annos'].append(obj)
         else:
             canister['parts'].append(obj)
         obj.set_cp("category_id", 10)
@@ -185,12 +207,14 @@ def load_small_bottle(tracebot_objs, path):
 
     small_bottle = {}
     small_bottle['parts'] = []
+    small_bottle['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'small_bottle':
             small_bottle['whole'] = obj
+            small_bottle['annos'].append(obj)
         else:
             small_bottle['parts'].append(obj)
         obj.set_cp("category_id", 12)
@@ -205,12 +229,14 @@ def load_medium_bottle(tracebot_objs, path):
 
     medium_bottle = {}
     medium_bottle['parts'] = []
+    medium_bottle['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'medium_bottle':
             medium_bottle['whole'] = obj
+            medium_bottle['annos'].append(obj)
         else:
             medium_bottle['parts'].append(obj)
         obj.set_cp("category_id", 13)
@@ -225,12 +251,14 @@ def load_large_bottle(tracebot_objs, path):
 
     large_bottle = {}
     large_bottle['parts'] = []
+    large_bottle['annos'] = []
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
         elif name == 'large_bottle':
             large_bottle['whole'] = obj
+            large_bottle['annos'].append(obj)
         else:
             large_bottle['parts'].append(obj)
         obj.set_cp("category_id", 14)
@@ -379,11 +407,15 @@ def render(config):
             pose_tmat = whole_obj.get_local2world_mat()
             whole_obj.disable_rigidbody()
             whole_obj.hide(True)
+            for part in tracebot[obj]['annos']:
+                part.set_local2world_mat(pose_tmat)
+                part.hide(True) 
             for part in tracebot[obj]['parts']:
                 part.set_local2world_mat(pose_tmat)
                 part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                 part.hide(False) 
                 parts.append(part)
+
 
         cam_poses = 0
         
@@ -409,9 +441,15 @@ def render(config):
         # render the whole pipeline
         data = bproc.renderer.render()
 
+        tracebot_anno = []
+        for obj in sampled_target_objs:
+            tracebot[obj]['annos'] != None
+            for o in tracebot[obj]['annos']:
+                tracebot_anno.append(o)
+
         # Write data in bop format
         bproc.writer.write_bop(os.path.join(config["output_dir"], 'bop_data'),
-                            target_objects = tracebot_full_body,
+                            target_objects = tracebot_anno,
                             dataset = dataset_name,
                             depth_scale = 0.1,
                             depths = data["depth"],
