@@ -1,8 +1,8 @@
 texture_dir: "/home/david/work/textures_samples" # path to textures download via "blenderproc download cc_textures"
-output_dir: "/home/david/work/render_tracebot/output" #path to result directory
+output_dir: "/home/david/work/render_tracebot/output_testset" #path to result directory
 models_dir: "/home/david/work/tracebot-management/TraceBotMeshesRealistic" #path to stl files
 dataset_name: "test_superresolution" #dataset_name
-num_scenes: 40 
+num_scenes: 1 
 img_per_scene: 1
 
 cam:
