@@ -515,7 +515,7 @@ def render(config):
     # activate depth rendering without antialiasing and set amount of samples for color rendering
     bproc.renderer.enable_depth_output(activate_antialiasing=False)
     bproc.renderer.set_max_amount_of_samples(50)
-    max_bounces = 100
+    max_bounces = 50
     bproc.renderer.set_light_bounces(
         glossy_bounces=max_bounces, 
         max_bounces=max_bounces, 
