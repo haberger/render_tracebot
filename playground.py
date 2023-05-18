@@ -67,30 +67,197 @@ def load_needle(tracebot_objs, path):
     needle['annos'] = []
     for obj in objs:
         name = obj.get_name()
-        if name == 'Empty':
+        if name[0:5] == 'Empty':
             continue
         elif name == 'needle':
             needle['whole'] = obj
+            obj.hide(True)
+            obj.disable_rigidbody()
         else:
+            obj.hide(True)
+            obj.disable_rigidbody()
             if name == 'needle_without':
                 needle['annos'].append(obj)
-                obj.set_cp("category_id", 5)
+                obj.set_cp("category_id", 3)
                 model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
                 obj.set_cp('model_path', model_path)
                 continue
             elif name == 'needle_cap':
                 needle['annos'].append(obj)
                 needle['parts'].append(obj)
-                obj.set_cp("category_id", 20)
+                obj.set_cp("category_id", 4)
                 model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
                 obj.set_cp('model_path', model_path)
                 continue
             else:
                 needle['parts'].append(obj)
-                obj.set_cp("category_id", 5)
+                obj.set_cp("category_id", 3)
                 model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
                 obj.set_cp('model_path', model_path)
+        obj.hide(True)
+        obj.disable_rigidbody()
     tracebot_objs["needle"] = needle
+    return tracebot_objs
+
+
+def load_needle_vr(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    needle_vr = {}
+    needle_vr['parts'] = []
+    needle_vr['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name[0:5] == 'Empty':
+            continue
+        elif name == 'needle_vr':
+            needle_vr['whole'] = obj
+            obj.hide(True)
+            obj.disable_rigidbody()
+        else:
+            obj.hide(True)
+            obj.disable_rigidbody()
+            if name == 'needle_without_vr':
+                needle_vr['annos'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vr', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap_vr':
+                needle_vr['annos'].append(obj)
+                needle_vr['parts'].append(obj)
+                obj.set_cp("category_id", 4)
+                model_path = os.path.join(config['models_dir'], 'needle_vr', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle_vr['parts'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vr', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+        obj.hide(True)
+        obj.disable_rigidbody()
+    tracebot_objs["needle_vr"] = needle_vr
+    return tracebot_objs
+
+def load_needle_vl(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    needle_vl = {}
+    needle_vl['parts'] = []
+    needle_vl['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name[0:5] == 'Empty':
+            continue
+        elif name == 'needle_vl':
+            needle_vl['whole'] = obj
+            obj.hide(True)
+            obj.disable_rigidbody()
+        else:
+            obj.hide(True)
+            obj.disable_rigidbody()
+            if name == 'needle_without_vl':
+                needle_vl['annos'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vl', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap_vl':
+                needle_vl['annos'].append(obj)
+                needle_vl['parts'].append(obj)
+                obj.set_cp("category_id", 4)
+                model_path = os.path.join(config['models_dir'], 'needle_vl', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle_vl['parts'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vl', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+        obj.hide(True)
+        obj.disable_rigidbody()
+    tracebot_objs["needle_vl"] = needle_vl
+    return tracebot_objs
+
+def load_needle_vd(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    needle_vd = {}
+    needle_vd['parts'] = []
+    needle_vd['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name[0:5] == 'Empty':
+            continue
+        elif name == 'needle_vd':
+            needle_vd['whole'] = obj
+            obj.hide(True)
+            obj.disable_rigidbody()
+        else:
+            obj.hide(True)
+            obj.disable_rigidbody()
+            if name == 'needle_without_vd':
+                needle_vd['annos'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vd', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap_vd':
+                needle_vd['annos'].append(obj)
+                needle_vd['parts'].append(obj)
+                obj.set_cp("category_id", 4)
+                model_path = os.path.join(config['models_dir'], 'needle_vd', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle_vd['parts'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vd', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+        obj.hide(True)
+        obj.disable_rigidbody()
+    tracebot_objs["needle_vd"] = needle_vd
+    return tracebot_objs
+
+def load_needle_vu(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    needle_vu = {}
+    needle_vu['parts'] = []
+    needle_vu['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        
+        if name[0:5] == 'Empty':
+            continue
+        elif name == 'needle_vu':
+            obj.hide(True)
+            obj.disable_rigidbody()
+            needle_vu['whole'] = obj
+        else:
+            obj.hide(True)
+            obj.disable_rigidbody()
+            if name == 'needle_without_vu':
+                needle_vu['annos'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vu', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap_vu':
+                needle_vu['annos'].append(obj)
+                needle_vu['parts'].append(obj)
+                obj.set_cp("category_id", 4)
+                model_path = os.path.join(config['models_dir'], 'needle_vu', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle_vu['parts'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle_vu', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+
+    tracebot_objs["needle_vu"] = needle_vu
     return tracebot_objs
 
 def load_white_clamp(tracebot_objs, path):
@@ -108,7 +275,7 @@ def load_white_clamp(tracebot_objs, path):
             white_clamp['annos'].append(obj)
         else:
             white_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 6)
+        obj.set_cp("category_id", 10)
         model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -131,7 +298,7 @@ def load_red_clamp(tracebot_objs, path):
             red_clamp['annos'].append(obj)
         else:
             red_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 7)
+        obj.set_cp("category_id", 11)
         model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
     tracebot_objs["red_clamp"] = red_clamp
@@ -152,7 +319,7 @@ def load_red_cap(tracebot_objs, path):
             red_cap['annos'].append(obj)
         else:
             red_cap['parts'].append(obj)
-        obj.set_cp("category_id", 8)
+        obj.set_cp("category_id", 5)
         model_path = os.path.join(config['models_dir'], 'red_cap', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
     tracebot_objs["red_cap"] = red_cap
@@ -173,7 +340,7 @@ def load_yellow_cap(tracebot_objs, path):
             yellow_cap['annos'].append(obj)
         else:
             yellow_cap['parts'].append(obj)
-        obj.set_cp("category_id", 9)
+        obj.set_cp("category_id", 8)
         model_path = os.path.join(config['models_dir'], 'yellow_cap', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
     tracebot_objs["yellow_cap"] = yellow_cap
@@ -194,7 +361,7 @@ def load_canister(tracebot_objs, path):
             canister['annos'].append(obj)
         else:
             canister['parts'].append(obj)
-        obj.set_cp("category_id", 10)
+        obj.set_cp("category_id", 6)
         model_path = os.path.join(config['models_dir'], 'canister', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -217,7 +384,7 @@ def load_small_bottle(tracebot_objs, path):
             small_bottle['annos'].append(obj)
         else:
             small_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 12)
+        obj.set_cp("category_id", 2)
         model_path = os.path.join(config['models_dir'], 'small_bottle', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -239,7 +406,7 @@ def load_medium_bottle(tracebot_objs, path):
             medium_bottle['annos'].append(obj)
         else:
             medium_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 13)
+        obj.set_cp("category_id", 1)
         model_path = os.path.join(config['models_dir'], 'medium_bottle', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -261,7 +428,7 @@ def load_large_bottle(tracebot_objs, path):
             large_bottle['annos'].append(obj)
         else:
             large_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 14)
+        obj.set_cp("category_id", 7)
         model_path = os.path.join(config['models_dir'], 'large_bottle', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -282,6 +449,11 @@ def render(config):
 
     tracebot = {}
     tracebot = load_needle(tracebot, os.path.join(config["models_dir"], 'needle/needle.blend'))
+    tracebot = load_needle_vd(tracebot, os.path.join(config["models_dir"], 'needle_vd/needle_vd.blend'))
+    tracebot = load_needle_vu(tracebot, os.path.join(config["models_dir"], 'needle_vu/needle_vu.blend'))
+    tracebot = load_needle_vl(tracebot, os.path.join(config["models_dir"], 'needle_vl/needle_vl.blend'))
+    tracebot = load_needle_vr(tracebot, os.path.join(config["models_dir"], 'needle_vr/needle_vr.blend'))
+
     tracebot = load_red_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_red.blend'))
     tracebot = load_white_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_white.blend'))
     tracebot = load_red_cap(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
@@ -328,16 +500,22 @@ def render(config):
     cc_textures = bproc.loader.load_ccmaterials(config["texture_dir"])
 
     # Define a function that samples 6-DoF poses
-    def sample_pose_func(obj: bproc.types.MeshObject):
+    def sample_pose_physics(obj: bproc.types.MeshObject):
         min = np.random.uniform([-0.3, -0.3, 0.0], [-0.2, -0.2, 0.0])
         max = np.random.uniform([0.2, 0.2, 0.4], [0.3, 0.3, 0.6])
         obj.set_location(np.random.uniform(min, max))
         obj.set_rotation_euler(bproc.sampler.uniformSO3())
-        
+
+    def sample_pose_upright(obj: bproc.types.MeshObject):
+        obj.set_location(bproc.sampler.upper_region(objects_to_sample_on=room_planes[0:1],
+                                                    min_height=1, max_height=4, face_sample_range=[0.4, 0.6]))
+        obj.set_rotation_euler(np.random.uniform([0, 0, 0], [0, 0, np.pi * 2]))        
+
+
     # activate depth rendering without antialiasing and set amount of samples for color rendering
     bproc.renderer.enable_depth_output(activate_antialiasing=False)
     bproc.renderer.set_max_amount_of_samples(50)
-    max_bounces = 20
+    max_bounces = 100
     bproc.renderer.set_light_bounces(
         glossy_bounces=max_bounces, 
         max_bounces=max_bounces, 
@@ -350,14 +528,32 @@ def render(config):
                                                 config["cam"]["height"])
     
     for i in range(config["num_scenes"]):
-
+        needles = [
+            'needle',
+            'needle_vd', 
+            'needle_vu', 
+            'needle_vr', 
+            'needle_vl'
+        ]
         # Sample bop objects for a scene
-        sampled_target_objs = list(np.random.choice(list(tracebot.keys()), size=len(tracebot.keys()), replace=False))
+        sampled_needle = []
+        sampled_needle = list(np.random.choice(needles, size=1, replace=False))
+        print(sampled_needle)
         sampled_distractor_bop_objs = []
         for bop_dataset in bop_datasets.values():
             dist_per_datatset = min(config["distractions"]["num_distractions"], len(bop_dataset))
             sampled_distractor_bop_objs += list(np.random.choice(bop_dataset, size=dist_per_datatset, replace=False))
-        print(sampled_target_objs)
+        sampled_target_objs = []
+        sampled_target_objs = [
+            'large_bottle', 
+            'yellow_cap', 
+            'white_clamp', 
+            'red_clamp', 
+            'red_cap',
+            'medium_bottle', 
+            'small_bottle', 
+            'canister'] + sampled_needle
+        
         tracebot_full_body = [tracebot[obj]['whole'] for obj in sampled_target_objs]
 
         # Randomize materials and set physics
@@ -380,12 +576,42 @@ def render(config):
             mat = plane.get_materials()[0]      
             mat.set_principled_shader_value("Alpha", 1.0)
 
-
         # tracebot_full_body = [tracebot[obj]['whole'] for obj in sampled_target_objs]
 
+        upright_objects = ['small_bottle', 'large_bottle', 'medium_bottle', 'canister']
+        upright = []
+        physics = []
+        drop_parts = []
+        
+        for obj in tracebot_full_body:
+            if obj.get_name() in upright_objects:
+                num = random.random()
+                if num > 0.3:
+                    upright.append(obj)
+                else:
+                    physics.append(obj)
+            else:
+                physics.append(obj)
+
+        num = random.random()
+        if num > 0.7:
+            for obj in tracebot[sampled_needle[0]]['parts']:
+                print(obj.get_name()[0:10])
+                if obj.get_name()[0:10] == 'needle_cap':
+                    obj.hide(False)
+                    obj.enable_rigidbody(True, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
+                    drop_parts.append(obj)
+
+        bproc.object.sample_poses_on_surface(objects_to_sample=upright,
+                                                surface=room_planes[0],
+                                                sample_pose_func=sample_pose_upright,
+                                                min_distance=0.01,
+                                                max_distance=0.2)
+
+
         # Sample object poses and check collisions 
-        bproc.object.sample_poses(objects_to_sample = sampled_distractor_bop_objs + tracebot_full_body,
-                                sample_pose_func = sample_pose_func, 
+        bproc.object.sample_poses(objects_to_sample = sampled_distractor_bop_objs + physics + drop_parts,
+                                sample_pose_func = sample_pose_physics, 
                                 max_tries = 1000)
                 
         # Physics Positioning
@@ -408,13 +634,15 @@ def render(config):
             whole_obj.disable_rigidbody()
             whole_obj.hide(True)
             for part in tracebot[obj]['annos']:
-                part.set_local2world_mat(pose_tmat)
-                part.hide(True) 
+                if part not in drop_parts:
+                    part.set_local2world_mat(pose_tmat)
+                    part.hide(True) 
             for part in tracebot[obj]['parts']:
-                part.set_local2world_mat(pose_tmat)
-                part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
-                part.hide(False) 
-                parts.append(part)
+                if part not in drop_parts:
+                    part.set_local2world_mat(pose_tmat)
+                    part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
+                    part.hide(False) 
+                    parts.append(part)
 
 
         cam_poses = 0
@@ -457,7 +685,7 @@ def render(config):
                             color_file_format = "JPEG",
                             ignore_dist_thres = 10)
 
-        for obj in (parts + sampled_distractor_bop_objs):      
+        for obj in (parts + sampled_distractor_bop_objs + drop_parts):      
             obj.disable_rigidbody()
             obj.hide(True)
 
