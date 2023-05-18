@@ -36,3 +36,19 @@ For bop template rendering:
 ```
 blenderproc run bop_templates.py temp_cfg.yaml
 ```
+
+
+
+
+
+
+1: "MediumRinseFluidK_Bottle.stl"
+2: "SmallSoyBroth_Bottle.stl"
+3: "tracebot_needle_without_cap.stl"
+4: "tracebot_cap.stl"
+5: "RedCap.stl"
+6: "FluidContainer.stl"
+7: "LargeRinseFluidA_Bottle.stl"
+8: "yellow cap"
+10: "white_clamp.stl"
+11: "red_clamp.stl"
