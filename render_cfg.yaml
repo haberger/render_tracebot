@@ -1,9 +1,10 @@
-texture_dir: "/home/david/work/textures_samples" # path to textures download via "blenderproc download cc_textures"
-output_dir: "/home/david/work/output10" #path to result directory
-models_dir: "/home/david/work/tracebot-management/TraceBotMeshesRealistic" #path to stl files
-dataset_name: "test_superresolution" #dataset_name
-num_scenes: 1
-img_per_scene: 3
+texture_dir: "/media/david/Sasha_external/David/textures" # path to textures download via "blenderproc download cc_textures"
+#texture_dir: "/media/david/Roadies2_Temp/textures" # path to textures download via "blenderproc download cc_textures"
+output_dir: "/media/david/Roadies2_Temp/tracebot/output" #path to result directory
+models_dir: "/home/david/tracebot-management/TraceBotMeshesRealistic" #path to stl files
+dataset_name: "tracebot_real" #dataset_name
+num_scenes: 40
+img_per_scene: 25
 
 cam:
   height: 720
@@ -19,7 +20,7 @@ cam:
     - 0.0
     - 1.0
   radius_min: 0.25
-  radius_max: 1.50 # CHABGWUOIEBWUEGBWEIUGB
+  radius_max: 1.50 #
   elevation_min: 5 #5
   elevation_max: 89
   sensor_width: 2.7288
