@@ -30,9 +30,3 @@ RUN pip3 install --no-cache-dir \
 
 # USER user
 WORKDIR /workspace
-
-RUN git clone https://github.com/haberger/Bproc_tracebot.git
-WORKDIR /workspace/Bproc_tracebot
-RUN pip install -e .
-WORKDIR /workspace
-RUN git clone https://github.com/haberger/render_tracebot.git

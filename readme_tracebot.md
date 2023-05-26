@@ -54,4 +54,13 @@ blenderproc run bop_templates.py temp_cfg.yaml
 11: "red_clamp.stl"
 
 
+docker build -t blenderproc-gpu .
 docker run --rm -it --runtime=nvidia --gpus all --mount type=bind,source=/media/david/Sasha_external/David/tracebot,target=/workspace  implicit_depth:latest
+
+git clone https://github.com/haberger/Bproc_tracebot.git
+cd Bproc_tracebot
+pip install -e .
+cd ..
+git clone https://github.com/haberger/render_tracebot.git
+cd render_tracebot
+./run.sh
