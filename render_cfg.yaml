@@ -1,7 +1,6 @@
-texture_dir: "/media/david/Sasha_external/David/textures" # path to textures download via "blenderproc download cc_textures"
-#texture_dir: "/media/david/Roadies2_Temp/textures" # path to textures download via "blenderproc download cc_textures"
-output_dir: "/media/david/Roadies2_Temp/tracebot/output" #path to result directory
-models_dir: "/home/david/tracebot-management/TraceBotMeshesRealistic" #path to stl files
+texture_dir: "/workspace/textures" # path to textures download via "blenderproc download cc_textures"
+output_dir: "/workspace/output" #path to result directory
+models_dir: "/workspace/tracebot-management/TraceBotMeshesRealistic/" #path to stl files
 dataset_name: "tracebot_real" #dataset_name
 num_scenes: 40
 img_per_scene: 25

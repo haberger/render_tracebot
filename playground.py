@@ -436,9 +436,7 @@ def load_large_bottle(tracebot_objs, path):
     return tracebot_objs 
 
 def render(config):
-
     bproc.init()
-
     # mesh_dir = os.path.join(dirname, config["models_dir"])
 
     dataset_name = config["dataset_name"]
@@ -515,7 +513,7 @@ def render(config):
     # activate depth rendering without antialiasing and set amount of samples for color rendering
     bproc.renderer.enable_depth_output(activate_antialiasing=False)
     bproc.renderer.set_max_amount_of_samples(50)
-    max_bounces = 100
+    max_bounces = 50
     bproc.renderer.set_light_bounces(
         glossy_bounces=max_bounces, 
         max_bounces=max_bounces, 
@@ -565,7 +563,7 @@ def render(config):
                                         emission_color=np.random.uniform([0.5, 0.5, 0.5, 1.0], [1.0, 1.0, 1.0, 1.0]))  
         light_plane.replace_materials(light_plane_material)
         light_point.set_color(np.random.uniform([0.5,0.5,0.5],[1,1,1]))
-        location = bproc.sampler.shell(center = [0, 0, 0], radius_min = 1, radius_max = 1.5,
+        location = bproc.sampler.shell(center = [0, 0, 0], radius_min = 1, radius_max = 1.8,
                                 elevation_min = 5, elevation_max = 89)
         light_point.set_location(location)
 
