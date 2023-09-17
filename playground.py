@@ -275,7 +275,7 @@ def load_white_clamp(tracebot_objs, path):
             white_clamp['annos'].append(obj)
         else:
             white_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 10)
+        obj.set_cp("category_id", 9)
         model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
@@ -298,7 +298,7 @@ def load_red_clamp(tracebot_objs, path):
             red_clamp['annos'].append(obj)
         else:
             red_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 11)
+        obj.set_cp("category_id", 10)
         model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
     tracebot_objs["red_clamp"] = red_clamp
