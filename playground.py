@@ -215,7 +215,7 @@ def render(config):
 
     def sample_pose_upright(obj: bproc.types.MeshObject):
         obj.set_location(bproc.sampler.upper_region(objects_to_sample_on=room_planes[0:1],
-                                                    min_height=1, max_height=4, face_sample_range=[0.3, 0.7]))
+                                                    min_height=1, max_height=4, face_sample_range=[0.35, 0.65]))
         obj.set_rotation_euler(np.random.uniform([0, 0, 0], [0, 0, np.pi * 2]))        
 
 
@@ -234,7 +234,19 @@ def render(config):
                                                 config["cam"]["width"], 
                                                 config["cam"]["height"])
     
-
+    #save initial color values of bottle caps into dictionary
+    reg_objs = ['large_bottle', 'medium_bottle', 'small_bottle']
+    regularization_memory = {}
+    for obj in tracebot.keys():
+        if obj in reg_objs:
+            for part in tracebot[obj]['parts']:
+                if part.get_name()[-10:] == 'bottle_cap':
+                    #get material
+                    mat = part.get_materials()[0]
+                    #set color of material to a random color
+                    param_dict = {}
+                    param_dict['Base Color'] = mat.get_principled_shader_value("Base Color")[0:4]
+                    regularization_memory[part.get_name()] = param_dict
 
     
     for i in range(config["num_scenes"]):
@@ -385,11 +397,19 @@ def render(config):
             for part in tracebot[obj]['parts']:
                 if part not in drop_parts:
                     part.set_local2world_mat(pose_tmat)
+
                     if part.get_name()[-7:] == 'cap_hat':
                         #with 50% chance add cap
                         num = random.random()
                         if num > 0.85:
                             continue
+                    if part.get_name()[-10:] == 'bottle_cap':
+                        #with 50% chance add cap
+                        num = random.random()
+                        mat = part.get_materials()[0]
+                        mat.set_principled_shader_value("Base Color", regularization_memory[part.get_name()]['Base Color'])
+                        if num > 0.9:
+                            mat.set_principled_shader_value("Base Color", np.random.uniform([0.3, 0.3, 0.3, 1.0], [1.0, 1.0, 1.0, 1.0]))
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
@@ -397,6 +417,11 @@ def render(config):
 
         cam_poses = 0
         
+        for obj in tracebot.keys():
+            whole_obj = tracebot[obj]['whole']
+            whole_obj.disable_rigidbody()
+            whole_obj.hide(True)        
+
         while cam_poses < config["img_per_scene"]:
             # Sample location
             location = bproc.sampler.shell(center = [0, 0, 0],
@@ -437,11 +462,11 @@ def render(config):
                             color_file_format = "JPEG",
                             ignore_dist_thres = 10)
 
-        for obj in (parts + sampled_distractor_bop_objs + drop_parts + sampled_distractor_glass_objs + sampled_distractor_artag_objs):      
+        for obj in (parts + sampled_distractor_bop_objs + drop_parts + sampled_distractor_glass_objs + sampled_distractor_artag_objs + physics + upright):      
             obj.disable_rigidbody()
             obj.hide(True)
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
     parser.add_argument('config_path', default="config.yaml", help="Path to config file")
     args = parser.parse_args()
