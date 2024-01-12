@@ -12,9 +12,7 @@ import imageio
 import random
 import shutil
 
-# TODO fix bump and physics simulTION CENTER OF MASS
-# TODO ALPHA
-# TODO if bop Dataset dosesn nopt have info generate info
+# TODO fix bump and physics simulTION CENTER OF MASS currently using original blenderproc
 
 def get_bounding_box_diameter(obj):
     bound_box = obj.get_bound_box().real
@@ -260,246 +258,30 @@ def load_needle_vu(tracebot_objs, path):
     tracebot_objs["needle_vu"] = needle_vu
     return tracebot_objs
 
-def load_white_clamp(tracebot_objs, path):
+def load_object_from_blend(tracebot_objs, path, obj_name_blend, category_id, obj_name_ply=None, obj_name_tracebot=None):
     objs = bproc.loader.load_blend(path)
-
-    white_clamp = {}
-    white_clamp['parts'] = []
-    white_clamp['annos'] = []
+    if obj_name_ply == None:
+        obj_name_ply = obj_name_blend
+    if obj_name_tracebot == None:
+        obj_name_tracebot = obj_name_blend
+    object_dict = {'parts': [], 'annos': []}
     for obj in objs:
         name = obj.get_name()
         if name == 'Empty':
             continue
-        elif name == 'clamp_w':
-            white_clamp['whole'] = obj
-            white_clamp['annos'].append(obj)
+        elif name == obj_name_blend:
+            object_dict['whole'] = obj
+            object_dict['annos'].append(obj)
         else:
-            white_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 9)
-        model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
+            object_dict['parts'].append(obj)
+        obj.set_cp("category_id", category_id)
+        model_path = os.path.join(config['models_dir'], obj_name_ply, obj.get_name() + '.ply')
         obj.set_cp('model_path', model_path)
 
-    tracebot_objs["white_clamp"] = white_clamp
+    tracebot_objs[obj_name_tracebot] = object_dict
 
     return tracebot_objs    
 
-def load_red_clamp(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    red_clamp = {}
-    red_clamp['parts'] = []
-    red_clamp['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'clamp_r':
-            red_clamp['whole'] = obj
-            red_clamp['annos'].append(obj)
-        else:
-            red_clamp['parts'].append(obj)
-        obj.set_cp("category_id", 10)
-        model_path = os.path.join(config['models_dir'], 'clamp', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    tracebot_objs["red_clamp"] = red_clamp
-    return tracebot_objs  
-
-def load_red_cap(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    red_cap = {}
-    red_cap['parts'] = []
-    red_cap['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'red_cap':
-            red_cap['whole'] = obj
-            red_cap['annos'].append(obj)
-        else:
-            red_cap['parts'].append(obj)
-        obj.set_cp("category_id", 5)
-        model_path = os.path.join(config['models_dir'], 'red_cap', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    tracebot_objs["red_cap"] = red_cap
-    return tracebot_objs  
-
-def load_yellow_cap(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    yellow_cap = {}
-    yellow_cap['parts'] = []
-    yellow_cap['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'yellow_cap':
-            yellow_cap['whole'] = obj
-            yellow_cap['annos'].append(obj)
-        else:
-            yellow_cap['parts'].append(obj)
-        obj.set_cp("category_id", 8)
-        model_path = os.path.join(config['models_dir'], 'yellow_cap', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    tracebot_objs["yellow_cap"] = yellow_cap
-    return tracebot_objs  
-
-def load_red_cap1(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    red_cap = {}
-    red_cap['parts'] = []
-    red_cap['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'red_cap.001':
-            red_cap['whole'] = obj
-            red_cap['annos'].append(obj)
-        else:
-            red_cap['parts'].append(obj)
-        obj.set_cp("category_id", 5)
-        model_path = os.path.join(config['models_dir'], 'red_cap', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    tracebot_objs["red_cap1"] = red_cap
-    return tracebot_objs  
-
-def load_yellow_cap1(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    yellow_cap = {}
-    yellow_cap['parts'] = []
-    yellow_cap['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'yellow_cap.001':
-            yellow_cap['whole'] = obj
-            yellow_cap['annos'].append(obj)
-        else:
-            yellow_cap['parts'].append(obj)
-        obj.set_cp("category_id", 8)
-        model_path = os.path.join(config['models_dir'], 'yellow_cap', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-    tracebot_objs["yellow_cap1"] = yellow_cap
-    return tracebot_objs  
-
-def load_canister(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    canister = {}
-    canister['parts'] = []
-    canister['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'canister':
-            canister['whole'] = obj
-            canister['annos'].append(obj)
-        else:
-            canister['parts'].append(obj)
-        obj.set_cp("category_id", 6)
-        model_path = os.path.join(config['models_dir'], 'canister', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-
-    tracebot_objs["canister"] = canister
-
-    return tracebot_objs    
-
-def load_canister1(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    canister = {}
-    canister['parts'] = []
-    canister['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        print(name)
-        if name == 'Empty':
-            continue
-        elif name == 'canister.001':
-            canister['whole'] = obj
-            canister['annos'].append(obj)
-        else:
-            canister['parts'].append(obj)
-        obj.set_cp("category_id", 6)
-        model_path = os.path.join(config['models_dir'], 'canister', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-
-    tracebot_objs["canister1"] = canister
-
-    return tracebot_objs    
-
-def load_small_bottle(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    small_bottle = {}
-    small_bottle['parts'] = []
-    small_bottle['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'small_bottle':
-            small_bottle['whole'] = obj
-            small_bottle['annos'].append(obj)
-        else:
-            small_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 2)
-        model_path = os.path.join(config['models_dir'], 'small_bottle', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-
-    tracebot_objs["small_bottle"] = small_bottle
-    return tracebot_objs  
-
-def load_medium_bottle(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    medium_bottle = {}
-    medium_bottle['parts'] = []
-    medium_bottle['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'medium_bottle':
-            medium_bottle['whole'] = obj
-            medium_bottle['annos'].append(obj)
-        else:
-            medium_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 1)
-        model_path = os.path.join(config['models_dir'], 'medium_bottle', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-
-    tracebot_objs["medium_bottle"] = medium_bottle
-    return tracebot_objs  
-
-def load_large_bottle(tracebot_objs, path):
-    objs = bproc.loader.load_blend(path)
-
-    large_bottle = {}
-    large_bottle['parts'] = []
-    large_bottle['annos'] = []
-    for obj in objs:
-        name = obj.get_name()
-        if name == 'Empty':
-            continue
-        elif name == 'large_bottle':
-            large_bottle['whole'] = obj
-            large_bottle['annos'].append(obj)
-        else:
-            large_bottle['parts'].append(obj)
-        obj.set_cp("category_id", 7)
-        model_path = os.path.join(config['models_dir'], 'large_bottle', obj.get_name() + '.ply')
-        obj.set_cp('model_path', model_path)
-
-    tracebot_objs["large_bottle"] = large_bottle
-    return tracebot_objs 
 
 def render(config):
     bproc.init()
@@ -518,17 +300,17 @@ def render(config):
     tracebot = load_needle_vl(tracebot, os.path.join(config["models_dir"], 'needle_vl/needle_vl.blend'))
     tracebot = load_needle_vr(tracebot, os.path.join(config["models_dir"], 'needle_vr/needle_vr.blend'))
 
-    tracebot = load_red_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_red.blend'))
-    tracebot = load_white_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_white.blend'))
-    tracebot = load_red_cap(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
-    tracebot = load_yellow_cap(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
-    tracebot = load_red_cap1(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
-    tracebot = load_yellow_cap1(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
-    tracebot = load_canister(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
-    tracebot = load_canister1(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
-    tracebot = load_small_bottle(tracebot, os.path.join(config["models_dir"], 'small_bottle/small_bottle.blend'))
-    tracebot = load_large_bottle(tracebot, os.path.join(config["models_dir"], 'large_bottle/large_bottle.blend'))
-    tracebot = load_medium_bottle(tracebot, os.path.join(config["models_dir"], 'medium_bottle/medium_bottle.blend'))
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'large_bottle/large_bottle.blend'), 'large_bottle', 7)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'medium_bottle/medium_bottle.blend'), 'medium_bottle', 1)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'small_bottle/small_bottle.blend'), 'small_bottle', 2)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'), 'canister', 6)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'), 'canister.001', 6, 'canister', 'canister1')
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'), 'yellow_cap', 8)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'), 'yellow_cap.001', 8, 'yellow_cap', 'yellow_cap1')
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'), 'red_cap', 5)
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'), 'red_cap.001', 5, 'red_cap', 'red_cap1')
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_red.blend'), 'clamp_r', 10, 'clamp', 'red_clamp')
+    tracebot = load_object_from_blend(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_white.blend'), 'clamp_w', 9, 'clamp', 'white_clamp')
 
     for key in tracebot.keys():
         for obj in tracebot[key]["parts"]:
@@ -716,8 +498,7 @@ def render(config):
                                         max_simulation_time=10,
                                         check_object_interval=1,
                                         substeps_per_frame = 20,
-                                        solver_iters=25,
-                                        origin_mode="CENTER_OF_MASS")
+                                        solver_iters=25)
    
 
         # BVH tree used for camera obstacle checks
