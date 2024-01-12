@@ -346,6 +346,48 @@ def load_yellow_cap(tracebot_objs, path):
     tracebot_objs["yellow_cap"] = yellow_cap
     return tracebot_objs  
 
+def load_red_cap1(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    red_cap = {}
+    red_cap['parts'] = []
+    red_cap['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'red_cap.001':
+            red_cap['whole'] = obj
+            red_cap['annos'].append(obj)
+        else:
+            red_cap['parts'].append(obj)
+        obj.set_cp("category_id", 5)
+        model_path = os.path.join(config['models_dir'], 'red_cap', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    tracebot_objs["red_cap1"] = red_cap
+    return tracebot_objs  
+
+def load_yellow_cap1(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    yellow_cap = {}
+    yellow_cap['parts'] = []
+    yellow_cap['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name == 'Empty':
+            continue
+        elif name == 'yellow_cap.001':
+            yellow_cap['whole'] = obj
+            yellow_cap['annos'].append(obj)
+        else:
+            yellow_cap['parts'].append(obj)
+        obj.set_cp("category_id", 8)
+        model_path = os.path.join(config['models_dir'], 'yellow_cap', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+    tracebot_objs["yellow_cap1"] = yellow_cap
+    return tracebot_objs  
+
 def load_canister(tracebot_objs, path):
     objs = bproc.loader.load_blend(path)
 
@@ -366,6 +408,30 @@ def load_canister(tracebot_objs, path):
         obj.set_cp('model_path', model_path)
 
     tracebot_objs["canister"] = canister
+
+    return tracebot_objs    
+
+def load_canister1(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+
+    canister = {}
+    canister['parts'] = []
+    canister['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        print(name)
+        if name == 'Empty':
+            continue
+        elif name == 'canister.001':
+            canister['whole'] = obj
+            canister['annos'].append(obj)
+        else:
+            canister['parts'].append(obj)
+        obj.set_cp("category_id", 6)
+        model_path = os.path.join(config['models_dir'], 'canister', obj.get_name() + '.ply')
+        obj.set_cp('model_path', model_path)
+
+    tracebot_objs["canister1"] = canister
 
     return tracebot_objs    
 
@@ -456,11 +522,20 @@ def render(config):
     tracebot = load_white_clamp(tracebot, os.path.join(config["models_dir"], 'clamp/clamp_white.blend'))
     tracebot = load_red_cap(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
     tracebot = load_yellow_cap(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
+    tracebot = load_red_cap1(tracebot, os.path.join(config["models_dir"], 'red_cap/red_cap.blend'))
+    tracebot = load_yellow_cap1(tracebot, os.path.join(config["models_dir"], 'yellow_cap/yellow_cap.blend'))
     tracebot = load_canister(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
+    tracebot = load_canister1(tracebot, os.path.join(config["models_dir"], 'canister/canister.blend'))
     tracebot = load_small_bottle(tracebot, os.path.join(config["models_dir"], 'small_bottle/small_bottle.blend'))
     tracebot = load_large_bottle(tracebot, os.path.join(config["models_dir"], 'large_bottle/large_bottle.blend'))
     tracebot = load_medium_bottle(tracebot, os.path.join(config["models_dir"], 'medium_bottle/medium_bottle.blend'))
 
+    for key in tracebot.keys():
+        for obj in tracebot[key]["parts"]:
+            obj.hide(True) 
+        tracebot[key]["whole"].hide(True) 
+        for obj in tracebot[key]["annos"]:
+            obj.hide(True) 
 
     # print(cap.get_location())
     bop_datasets = {}
@@ -539,19 +614,43 @@ def render(config):
         print(sampled_needle)
         sampled_distractor_bop_objs = []
         for bop_dataset in bop_datasets.values():
-            dist_per_datatset = min(config["distractions"]["num_distractions"], len(bop_dataset))
+            dist_per_datatset = min(config["distractions"]["num_bop_distractions"], len(bop_dataset))
             sampled_distractor_bop_objs += list(np.random.choice(bop_dataset, size=dist_per_datatset, replace=False))
-        sampled_target_objs = []
-        sampled_target_objs = [
+
+        singles = [
             'large_bottle', 
-            'yellow_cap', 
             'white_clamp', 
             'red_clamp', 
-            'red_cap',
             'medium_bottle', 
             'small_bottle', 
-            'canister'] + sampled_needle
+            'yellow_cap', 
+            'red_cap',
+            'canister'
+        ]
+
+        sampled_singles = list(np.random.choice(singles, size=7, replace=False))
+
+        duplicates = [
+            'canister1',
+            'yellow_cap1', 
+            'red_cap1',
+        ]
         
+        sampled_dublicates = list(np.random.choice(duplicates, size=2, replace=False))
+
+        sampled_target_objs = []
+        # sampled_target_objs = [
+        #     'large_bottle', 
+        #     'yellow_cap', 
+        #     'white_clamp', 
+        #     'red_clamp', 
+        #     'red_cap',
+        #     'medium_bottle', 
+        #     'small_bottle', 
+        #     'canister'] + sampled_needle
+        
+        sampled_target_objs = sampled_singles + sampled_dublicates + sampled_needle
+
         tracebot_full_body = [tracebot[obj]['whole'] for obj in sampled_target_objs]
 
         # Randomize materials and set physics
@@ -641,7 +740,6 @@ def render(config):
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
-
 
         cam_poses = 0
         
