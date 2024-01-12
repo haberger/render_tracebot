@@ -228,11 +228,7 @@ def render(config):
         max_bounces=32, 
         transmission_bounces=32, 
         transparent_max_bounces=50, 
-        volume_bounces=32)
-    
-    # set render caustics
-    bproc.renderer.set_render_caustics(True)
-    
+        volume_bounces=32)    
 
     bproc.camera.set_intrinsics_from_K_matrix(np.reshape(config["cam"]["K"], (3, 3)), 
                                                 config["cam"]["width"], 
@@ -392,14 +388,13 @@ def render(config):
                     if part.get_name()[-7:] == 'cap_hat':
                         #with 50% chance add cap
                         num = random.random()
-                        if num > 0.0:
+                        if num > 0.85:
                             continue
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
                     print(part.get_name())
 
-        exit()
         cam_poses = 0
         
         while cam_poses < config["img_per_scene"]:
