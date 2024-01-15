@@ -1,9 +1,9 @@
-texture_dir: "/workspace/textures" # path to textures download via "blenderproc download cc_textures"
-output_dir: "/workspace/output" #path to result directory
-models_dir: "/workspace/tracebot-management/TraceBotMeshesRealistic/" #path to stl files
-dataset_name: "tracebot_real" #dataset_name
-num_scenes: 40
-img_per_scene: 25
+texture_dir: "/home/philipp/DAVID/textures" # path to textures download via "blenderproc download cc_textures"
+output_dir: "output/test" #path to result directory
+models_dir: "/home/philipp/DAVID/tracebot-management/TraceBotMeshesRealistic" #path to stl files
+dataset_name: "test" #dataset_name
+num_scenes: 30
+img_per_scene: 1
 
 cam:
   height: 720
@@ -25,12 +25,16 @@ cam:
   sensor_width: 2.7288
 
 distractions:
-  bop_datasets_path: "/home/david/work/bop_dataset" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
-  bop_datasets: #datasets to load distractors from
-    # - "tless"
-    # - "ycbv"
+  bop_datasets_path: "/home/philipp/DAVID/BOP" #pfath to bop dataset can be downloaded at https://bop.felk.cvut.cz/datasets/
+  bop_datasets: 
     # - "lm"
-  num_distractions: 2 #anumber of distractors per bop dataset
-  max_size: 0.25 #biggest allowed size(diagonal of bounding box) the objects are allowed to be. In m
+    - "tless"
+    # - "ycbv"
+  num_bop_distractions: 1 #anumber of distractors per bop dataset
+  max_size: 0.25 #max size of bop distractors
+  glass_distractor_path: "/home/philipp/DAVID/glass_distractors.blend"
+  num_glass_distractions: 1
+  artag_distractor_path: "/home/philipp/DAVID/artags.blend"
+  num_ar_distractions: 2
 
 

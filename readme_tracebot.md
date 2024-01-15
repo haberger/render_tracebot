@@ -50,12 +50,12 @@ blenderproc run bop_templates.py temp_cfg.yaml
 6: "FluidContainer.stl"
 7: "LargeRinseFluidA_Bottle.stl"
 8: "yellow cap"
-10: "white_clamp.stl"
-11: "red_clamp.stl"
+9: "white_clamp.stl"
+10: "red_clamp.stl"
 
 
 docker build -t blenderproc-gpu .
-docker run --rm -it --runtime=nvidia --gpus all --mount type=bind,source=/media/david/Sasha_external/David/tracebot,target=/workspace  implicit_depth:latest
+docker run --rm -it --runtime=nvidia --gpus all --mount type=bind,source=/home/philipp/DAVID,target=/workspace  implicit_depth:latest
 
 git clone https://github.com/haberger/Bproc_tracebot.git
 cd Bproc_tracebot
@@ -64,3 +64,6 @@ cd ..
 git clone https://github.com/haberger/render_tracebot.git
 cd render_tracebot
 ./run.sh
+
+sudo docker run --rm -it --runtime=nvidia --gpus all --shm-size=2gb  --mount type=bind,source=/home/philipp/DAVID,target=/workspace  blenderproc-gpu:latest
+

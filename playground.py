@@ -250,6 +250,9 @@ def render(config):
 
     
     for i in range(config["num_scenes"]):
+        #set seed
+        np.random.seed(14)
+        random.seed(14)
 
         #Sample Bop Distractors
         bop_objs = []
@@ -342,7 +345,6 @@ def render(config):
         num = random.random()
         if num > 0.7:
             for obj in tracebot[sampled_needle[0]]['parts']:
-                print(obj.get_name()[0:10])
                 if obj.get_name()[0:10] == 'needle_cap':
                     obj.hide(False)
                     obj.enable_rigidbody(True, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
@@ -409,14 +411,12 @@ def render(config):
                         mat = part.get_materials()[0]
                         mat.set_principled_shader_value("Base Color", regularization_memory[part.get_name()]['Base Color'])
                         if num > 0.9:
-                            mat.set_principled_shader_value("Base Color", np.random.uniform([0.3, 0.3, 0.3, 1.0], [1.0, 1.0, 1.0, 1.0]))
+                            mat.set_principled_shader_value("Base Color", np.random.uniform([0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0]))
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
-                    print(part.get_name())
 
         cam_poses = 0
-        
         for obj in tracebot.keys():
             whole_obj = tracebot[obj]['whole']
             whole_obj.disable_rigidbody()
