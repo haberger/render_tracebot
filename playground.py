@@ -1,8 +1,4 @@
 import blenderproc as bproc
-# from curses.panel import bottom_panel
-# from logging import raiseExceptions
-# from sre_parse import CATEGORIES
-# from unicodedata import category
 import argparse
 import os
 import numpy as np
@@ -57,7 +53,47 @@ def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size): #TODO 
                 distractor_objs.append(bop_obj)
     return distractor_objs   
 
-def load_needle_from_blend(tracebot_objs, path, needle_name):
+
+def load_needle_from_blend(tracebot_objs, path):
+    objs = bproc.loader.load_blend(path)
+    needle = {}
+    needle['parts'] = []
+    needle['annos'] = []
+    for obj in objs:
+        name = obj.get_name()
+        if name[0:5] == 'Empty':
+            continue
+        elif name == 'needle':
+            needle['whole'] = obj
+            obj.hide(True)
+            obj.disable_rigidbody()
+        else:
+            obj.hide(True)
+            obj.disable_rigidbody()
+            if name == 'needle_without':
+                needle['annos'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            elif name == 'needle_cap':
+                needle['annos'].append(obj)
+                needle['parts'].append(obj)
+                obj.set_cp("category_id", 4)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+                continue
+            else:
+                needle['parts'].append(obj)
+                obj.set_cp("category_id", 3)
+                model_path = os.path.join(config['models_dir'], 'needle', obj.get_name() + '.ply')
+                obj.set_cp('model_path', model_path)
+        obj.hide(True)
+        obj.disable_rigidbody()
+    tracebot_objs["needle"] = needle
+    return tracebot_objs
+
+def load_needle_variation_from_blend(tracebot_objs, path, needle_name):
     objs = bproc.loader.load_blend(path)
 
     needle_vu = {}
@@ -132,6 +168,15 @@ def load_objects_from_blend(path):
             obj.hide(True) 
     return objs
 
+def regularize_bottle_glass(obj, roughness=0.0, ior=1.5, mix_factor=0.35):
+    materials = obj.get_materials()
+    # abs(np.random.normal(0, 0.01))
+    materials[0].nodes["Glass BSDF"].inputs["Roughness"].default_value = np.abs(np.random.normal(roughness, 0.01)) 
+    # np.random.normal(1.5, 0.01)
+    materials[0].nodes["Glass BSDF"].inputs["IOR"].default_value = np.random.normal(ior, 0.01) 
+    # np.random.normal(0.3, 0.015)
+    materials[0].nodes["Mix"].inputs["Fac"].default_value = np.random.normal(mix_factor, 0.03)
+    return obj
 
 def render(config):
     bproc.init()
@@ -144,12 +189,11 @@ def render(config):
         shutil.copytree(config['models_dir'], target_path)
 
     tracebot = {}
-    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle/needle.blend'), 'needle')
-    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vd/needle_vd.blend'), 'needle_vd')
-    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vu/needle_vu.blend'), 'needle_vu')
-    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vl/needle_vl.blend'), 'needle_vl')
-    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vr/needle_vr.blend'), 'needle_vr')
-
+    tracebot = load_needle_from_blend(tracebot, os.path.join(config["models_dir"], 'needle/needle.blend'))
+    tracebot = load_needle_variation_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vd/needle_vd.blend'), 'needle_vd')
+    tracebot = load_needle_variation_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vu/needle_vu.blend'), 'needle_vu')
+    tracebot = load_needle_variation_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vl/needle_vl.blend'), 'needle_vl')
+    tracebot = load_needle_variation_from_blend(tracebot, os.path.join(config["models_dir"], 'needle_vr/needle_vr.blend'), 'needle_vr')
 
     tracebot = load_tracebot_object_from_blend(tracebot, os.path.join(config["models_dir"], 'large_bottle/large_bottle.blend'), 'large_bottle', 7)
     tracebot = load_tracebot_object_from_blend(tracebot, os.path.join(config["models_dir"], 'medium_bottle/medium_bottle.blend'), 'medium_bottle', 1)
@@ -247,12 +291,8 @@ def render(config):
                     param_dict = {}
                     param_dict['Base Color'] = mat.get_principled_shader_value("Base Color")[0:4]
                     regularization_memory[part.get_name()] = param_dict
-
     
     for i in range(config["num_scenes"]):
-        #set seed
-        np.random.seed(14)
-        random.seed(14)
 
         #Sample Bop Distractors
         bop_objs = []
@@ -401,17 +441,22 @@ def render(config):
                     part.set_local2world_mat(pose_tmat)
 
                     if part.get_name()[-7:] == 'cap_hat':
-                        #with 50% chance add cap
+                        #with 15% no cap
                         num = random.random()
                         if num > 0.85:
                             continue
                     if part.get_name()[-10:] == 'bottle_cap':
-                        #with 50% chance add cap
+                        #with 10% chance cap has different color
                         num = random.random()
                         mat = part.get_materials()[0]
                         mat.set_principled_shader_value("Base Color", regularization_memory[part.get_name()]['Base Color'])
                         if num > 0.9:
                             mat.set_principled_shader_value("Base Color", np.random.uniform([0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0]))
+                    if obj in ['large_bottle', 'medium_bottle', 'small_bottle']:
+                        if len(part.get_name().split("_")) > 2:
+                            if part.get_name().split("_")[2] == 'bottle':
+                                part = regularize_bottle_glass(part)
+                    
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
