@@ -8,7 +8,7 @@ import imageio
 import random
 import shutil
 
-# TODO fix bump and physics simulTION CENTER OF MASS currently using original blenderproc
+# TODO fix bump and physics simulation CENTER OF MASS currently using original Blenderproc
 
 def get_bounding_box_diameter(obj):
     bound_box = obj.get_bound_box().real
@@ -30,7 +30,7 @@ def set_material_properties(obj, cc_textures):
         obj.hide(False)
         return obj
 
-def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size): #TODO distractor or no distracotr
+def load_bop_dataset_as_distractor(bop_datasets_path, dataset, max_size): #TODO distractor or no distractor
     if dataset in ["ycbv", "lm", "tyol", "hb", "icbin", "itodd", "tud1"]:
         bop_dataset_path = os.path.join(bop_datasets_path, dataset)
         bop_dataset = bproc.loader.load_bop_objs(
@@ -169,6 +169,7 @@ def load_objects_from_blend(path):
     return objs
 
 def regularize_bottle_glass(obj, roughness=0.0, ior=1.5, mix_factor=0.35):
+    print(obj.get_name())
     materials = obj.get_materials()
     # abs(np.random.normal(0, 0.01))
     materials[0].nodes["Glass BSDF"].inputs["Roughness"].default_value = np.abs(np.random.normal(roughness, 0.01)) 
@@ -293,6 +294,8 @@ def render(config):
                     regularization_memory[part.get_name()] = param_dict
     
     for i in range(config["num_scenes"]):
+        np.random.seed(i)
+        random.seed(i)
 
         #Sample Bop Distractors
         bop_objs = []
@@ -382,6 +385,8 @@ def render(config):
             else:
                 physics.append(obj)
 
+        upright_names = [x.get_name() for x in upright]
+
         num = random.random()
         if num > 0.7:
             for obj in tracebot[sampled_needle[0]]['parts']:
@@ -425,6 +430,11 @@ def render(config):
 
 
         parts = []
+
+
+        #sample fluidlevel for bottles:
+        fluid_level = np.random.choice(["fluid1","fluid2","fluid3"])
+        liquid_counter = 0
         for obj in sampled_target_objs:
             if obj not in tracebot.keys():
                 continue
@@ -453,14 +463,31 @@ def render(config):
                         if num > 0.9:
                             mat.set_principled_shader_value("Base Color", np.random.uniform([0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0]))
                     if obj in ['large_bottle', 'medium_bottle', 'small_bottle']:
+                        print(obj)
                         if len(part.get_name().split("_")) > 2:
                             if part.get_name().split("_")[2] == 'bottle':
                                 part = regularize_bottle_glass(part)
-                    
+
+                            part_type = part.get_name().split("_")[2]
+                            is_liquid = part_type[0:5] == "fluid"
+                            if is_liquid:
+                                part.hide(True)
+                                if obj in upright_names and fluid_level == part_type:
+                                    num = random.random()
+                                    if num > 0.8:
+                                        part.hide(False)
+                                        #sample color of glass shader
+                                        mat = part.get_materials()
+                                        #mat[0].nodes["Glass BSDF"].inputs["Color"].default_value = np.abs(np.random.normal(roughness, 0.01)) 
+                                        mat[0].nodes["Glass BSDF"].inputs["Color"].default_value = np.random.uniform([0.1, 0.1, 0.1, 1.0], [1.0, 1.0, 1.0, 1.0])
+                                        parts.append(part)
+                                continue
+
                     part.enable_rigidbody(False, mass=1.0, friction = 100.0, linear_damping = 0.99, angular_damping = 0.99)
                     part.hide(False) 
                     parts.append(part)
 
+        #iterate over all parts and check if liquids are hidden
         cam_poses = 0
         for obj in tracebot.keys():
             whole_obj = tracebot[obj]['whole']
